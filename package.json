@@ -1,0 +1,24 @@
+{
+  "name": "comic-reader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "electron.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lschpmn/comic-reader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lschpmn/comic-reader/issues"
+  },
+  "homepage": "https://github.com/lschpmn/comic-reader#readme",
+  "dependencies": {
+    "electron": "12.0.4",
+    "ts-node": "9.1.1"
+  }
+}
