@@ -1,30 +1,43 @@
 'use strict';
 
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
+const { app, BrowserWindow } = require('electron');
+const { join } = require('path');
 
-function createWindow () {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+const portIndex = process.argv.indexOf('--port');
+
+const IS_PROD = process.argv.includes('--prod');
+const PORT = portIndex > 0 && process.argv[portIndex + 1];
+
+let win;
+
+function createWindow() {
+  win = new BrowserWindow({
+    height: 720 + (IS_PROD ? 0 : 400),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
+      enableRemoteModule: false,
+      nodeIntegration: true,
+    },
+    width: 1280,
+  });
 
-  win.loadFile('index.html')
+  IS_PROD
+    ? win
+      .loadFile(join(__dirname, 'public', 'index.html'))
+      .catch(console.log)
+    : win
+      .loadURL(`http://127.0.0.1:${PORT}/index.html`)
+      .catch(console.log);
+
+  IS_PROD || win.webContents.openDevTools();
+
+  win.on('closed', () => {
+    app.quit();
+  });
 }
 
-app.whenReady().then(() => {
-  createWindow()
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    }
-  })
-})
+app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
-  app.quit()
-})
+  console.log('window closed');
+  app.quit();
+});
