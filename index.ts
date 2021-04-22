@@ -19,7 +19,7 @@ const compiler = webpack(webpackConfig);
 
   startNodemon(nodemonPort);
 
-  startWebpack(webpackPort, nodemonPort)
+  startWebpack(webpackPort, nodemonPort);
 })();
 
 function startElectron(port: number) {
@@ -27,12 +27,7 @@ function startElectron(port: number) {
   const electronPath = join(__dirname, 'node_modules', '.bin', 'electron.cmd');
   const electronProcess = spawn(`${electronPath}`, ['electron.js', '--port', '' + port]);
 
-  electronProcess.stdout.on('data', data => {
-    const str = data.toString();
-    console.log(str);
-    if (str.includes('window closed')) process.exit();
-  });
-
+  electronProcess.stdout.on('data', data => console.log(data.toString()));
   electronProcess.stderr.on('data', data => console.log(data.toString()));
 }
 

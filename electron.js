@@ -29,15 +29,12 @@ function createWindow() {
       .catch(console.log);
 
   IS_PROD || win.webContents.openDevTools();
-
-  win.on('closed', () => {
-    app.quit();
-  });
 }
 
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
-  console.log('window closed');
-  app.quit();
+  console.log('windows closed');
+  if (IS_PROD) app.quit();
+  else createWindow();
 });

@@ -4,21 +4,25 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TreeItem from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
 import React, { useEffect, useState } from 'react';
-import { getDefaultPath } from '../lib/fileService';
+import { getDefaultPath, listFiles } from '../lib/fileService';
 
 export default () => {
+  const [path, setPath] = useState([]);
   const [files, setFiles] = useState([]);
+  console.log(path);
 
   useEffect(() => {
-    console.log('attempting to get files');
     getDefaultPath()
-      .then(files => {
-        console.log('got files');
-        console.log(files);
-        setFiles(files);
-      })
+      .then(_path => setPath(_path))
       .catch(console.log);
   }, []);
+
+  useEffect(() => {
+    if (path.length === 0) return;
+    listFiles(path)
+      .then(_files => setFiles(_files))
+      .catch(console.log);
+  }, [path]);
 
   return <Paper style={{ width: '15rem' }}>
     <h3 style={{ margin: 0 }}>Files!</h3>
