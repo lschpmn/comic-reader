@@ -6,10 +6,11 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import HomeIcon from '@material-ui/icons/Home';
 import TreeView from '@material-ui/lab/TreeView';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FileTree } from '../../types';
 import { getDefaultPath, listFiles } from '../lib/fileService';
 import FileTreeItem from './FileTreeItem';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
 export default () => {
   const [path, setPath] = useState([]);
@@ -17,9 +18,7 @@ export default () => {
   console.log(path);
 
   useEffect(() => {
-    getDefaultPath()
-      .then(_path => setPath(_path))
-      .catch(console.log);
+    defaultPath();
   }, []);
 
   useEffect(() => {
@@ -37,11 +36,20 @@ export default () => {
       .catch(console.log);
   }, [path]);
 
+  const changePath = useCallback(_path => setPath(_path), [setPath]);
+  const defaultPath = useCallback(() =>
+    getDefaultPath()
+      .then(_path => setPath(_path))
+      .catch(console.log), [setPath]);
+
   return <Paper style={{ overflow: 'auto', width: '15rem' }}>
     <AppBar position="relative" style={{ height: 'auto' }}>
       <Toolbar style={{ height: '2rem', padding: 0, minHeight: 'auto' }}>
-        <IconButton style={{ position: 'relative', left: '-0.5rem', padding: '0.5rem' }}>
+        <IconButton onClick={defaultPath} style={{ borderRadius: 0, position: 'relative', padding: 1 }}>
           <HomeIcon/>
+        </IconButton>
+        <IconButton onClick={() => changePath(path.slice(0, path.length - 1))} style={{ borderRadius: 0, position: 'relative', padding: 1 }}>
+          <ArrowDropUpIcon/>
         </IconButton>
         <span style={{ fontSize: '1rem', textAlign: 'center' }}>{path.slice(-1)[0]}</span>
       </Toolbar>
@@ -55,6 +63,7 @@ export default () => {
     >
       {tree.fileTree && (
         <FileTreeItem
+          changePath={changePath}
           path={path}
           tree={tree}
         />
