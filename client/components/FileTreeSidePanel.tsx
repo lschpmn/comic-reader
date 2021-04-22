@@ -1,14 +1,19 @@
+import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
+import Toolbar from '@material-ui/core/Toolbar';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import TreeItem from '@material-ui/lab/TreeItem';
+import HomeIcon from '@material-ui/icons/Home';
 import TreeView from '@material-ui/lab/TreeView';
 import React, { useEffect, useState } from 'react';
+import { FileTree } from '../../types';
 import { getDefaultPath, listFiles } from '../lib/fileService';
+import FileTreeItem from './FileTreeItem';
 
 export default () => {
   const [path, setPath] = useState([]);
-  const [files, setFiles] = useState([]);
+  const [tree, setTree] = useState({ isFile: false } as FileTree);
   console.log(path);
 
   useEffect(() => {
@@ -20,24 +25,40 @@ export default () => {
   useEffect(() => {
     if (path.length === 0) return;
     listFiles(path)
-      .then(_files => setFiles(_files))
+      .then(_files => {
+        const fileTree = _files.reduce((obj, file) =>
+          ({ ...obj, [file]: { isFile: false }, }), {});
+
+        setTree({
+          ...tree,
+          fileTree,
+        });
+      })
       .catch(console.log);
   }, [path]);
 
-  return <Paper style={{ width: '15rem' }}>
-    <h3 style={{ margin: 0 }}>Files!</h3>
+  return <Paper style={{ overflow: 'auto', width: '15rem' }}>
+    <AppBar position="relative" style={{ height: 'auto' }}>
+      <Toolbar style={{ height: '2rem', padding: 0, minHeight: 'auto' }}>
+        <IconButton style={{ position: 'relative', left: '-0.5rem', padding: '0.5rem' }}>
+          <HomeIcon/>
+        </IconButton>
+        <span style={{ fontSize: '1rem', textAlign: 'center' }}>{path.slice(-1)[0]}</span>
+      </Toolbar>
+    </AppBar>
+
     <TreeView
       disableSelection
       defaultCollapseIcon={<ExpandMoreIcon/>}
       defaultExpandIcon={<ChevronRightIcon/>}
       defaultEndIcon={<ChevronRightIcon/>}
     >
-      <TreeItem nodeId="1" label="test">
-        <TreeItem nodeId="2" label="inside" onClick={() => console.log('clicked')}/>
-      </TreeItem>
-      {files.map(file => (
-        <TreeItem key={file} nodeId={file} label={file} />
-      ))}
+      {tree.fileTree && (
+        <FileTreeItem
+          path={path}
+          tree={tree}
+        />
+      )}
     </TreeView>
   </Paper>;
 };
