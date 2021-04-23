@@ -3,6 +3,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import Toolbar from '@material-ui/core/Toolbar';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import HomeIcon from '@material-ui/icons/Home';
 import TreeView from '@material-ui/lab/TreeView';
@@ -10,7 +11,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FileTree } from '../../types';
 import { getDefaultPath, listFiles } from '../lib/fileService';
 import FileTreeItem from './FileTreeItem';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
 export default () => {
   const [path, setPath] = useState([]);
@@ -24,9 +24,8 @@ export default () => {
   useEffect(() => {
     if (path.length === 0) return;
     listFiles(path)
-      .then(_files => {
-        const fileTree = _files.reduce((obj, file) =>
-          ({ ...obj, [file]: { isFile: false }, }), {});
+      .then(files => {
+        const fileTree = files.reduce((obj, file) => ({ ...obj, [file]: { isFile: false } }), {});
 
         setTree({
           ...tree,
@@ -37,19 +36,36 @@ export default () => {
   }, [path]);
 
   const changePath = useCallback(_path => setPath(_path), [setPath]);
-  const defaultPath = useCallback(() =>
+
+  const defaultPath = useCallback(() => {
     getDefaultPath()
       .then(_path => setPath(_path))
-      .catch(console.log), [setPath]);
+      .catch(console.log);
+  }, [setPath]);
+
+  const expand = useCallback((_path: string[]) => {
+    listFiles(_path)
+      .then(files => {
+        const fileTree = files && files.reduce((obj, file) => ({ ...obj, [file]: { isFile: false } }), {});
+        console.log('fileTree');
+        console.log(fileTree);
+      });
+  }, []);
 
   return <Paper style={{ overflow: 'auto', width: '15rem' }}>
     <AppBar position="relative" style={{ height: 'auto' }}>
       <Toolbar style={{ height: '2rem', padding: 0, minHeight: 'auto' }}>
-        <IconButton onClick={defaultPath} style={{ borderRadius: 0, position: 'relative', padding: 1 }}>
+        <IconButton
+          onClick={defaultPath}
+          style={{ borderRadius: 0, position: 'relative', padding: 1 }}
+        >
           <HomeIcon/>
         </IconButton>
-        <IconButton onClick={() => changePath(path.slice(0, path.length - 1))} style={{ borderRadius: 0, position: 'relative', padding: 1 }}>
-          <ArrowDropUpIcon/>
+        <IconButton
+          onClick={() => changePath(path.slice(0, path.length - 1))}
+          style={{ borderRadius: 0, position: 'relative', padding: 1 }}
+        >
+          <ExpandLessIcon/>
         </IconButton>
         <span style={{ fontSize: '1rem', textAlign: 'center' }}>{path.slice(-1)[0]}</span>
       </Toolbar>
@@ -64,6 +80,7 @@ export default () => {
       {tree.fileTree && (
         <FileTreeItem
           changePath={changePath}
+          expand={expand}
           path={path}
           tree={tree}
         />
