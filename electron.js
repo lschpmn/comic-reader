@@ -1,6 +1,6 @@
 'use strict';
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { join } = require('path');
 
 const portIndex = process.argv.indexOf('--port');
@@ -14,6 +14,7 @@ function createWindow() {
   win = new BrowserWindow({
     height: 720 + (IS_PROD ? 0 : 400),
     webPreferences: {
+      contextIsolation: false,
       enableRemoteModule: false,
       nodeIntegration: true,
     },
@@ -37,4 +38,17 @@ app.on('window-all-closed', () => {
   console.log('windows closed');
   if (IS_PROD) app.quit();
   else createWindow();
+});
+
+ipcMain.handle('select-directory', async (path) => {
+  try {
+    return await dialog.showOpenDialog({
+      defaultPath: path,
+      properties: ['openDirectory'],
+    });
+  } catch (err) {
+    console.log('dialog error');
+    console.log(err);
+    return null;
+  }
 });

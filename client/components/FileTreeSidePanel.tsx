@@ -10,7 +10,9 @@ import TreeView from '@material-ui/lab/TreeView';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FileTree } from '../../types';
 import { getDefaultPath, listFiles } from '../lib/fileService';
+import { openPathDialog } from '../lib/utils';
 import FileTreeItem from './FileTreeItem';
+import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 
 export default () => {
   const [path, setPath] = useState([]);
@@ -43,15 +45,6 @@ export default () => {
       .catch(console.log);
   }, [setPath]);
 
-  const expand = useCallback((_path: string[]) => {
-    listFiles(_path)
-      .then(files => {
-        const fileTree = files && files.reduce((obj, file) => ({ ...obj, [file]: { isFile: false } }), {});
-        console.log('fileTree');
-        console.log(fileTree);
-      });
-  }, []);
-
   return <Paper style={{ overflow: 'auto', width: '15rem' }}>
     <AppBar position="relative" style={{ height: 'auto' }}>
       <Toolbar style={{ height: '2rem', padding: 0, minHeight: 'auto' }}>
@@ -60,6 +53,16 @@ export default () => {
           style={{ borderRadius: 0, position: 'relative', padding: 1 }}
         >
           <HomeIcon/>
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            openPathDialog(path)
+              .then(console.log)
+              .catch(console.log);
+          }}
+          style={{ borderRadius: 0, position: 'relative', padding: 1 }}
+        >
+          <FolderOpenIcon/>
         </IconButton>
         <IconButton
           onClick={() => changePath(path.slice(0, path.length - 1))}
@@ -80,7 +83,6 @@ export default () => {
       {tree.fileTree && (
         <FileTreeItem
           changePath={changePath}
-          expand={expand}
           path={path}
           tree={tree}
         />
