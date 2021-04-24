@@ -6,40 +6,12 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import TreeView from '@material-ui/lab/TreeView';
-import { sep } from 'path';
-import React, { useCallback, useEffect, useState } from 'react';
-import { FileTree } from '../../types';
-import { getDefaultPath, getFileTree } from '../lib/fileService';
-import { openPathDialog } from '../lib/utils';
+import React, { useContext } from 'react';
+import FileTreeContext from '../contexts/FileTreeContext';
 import FileTreeItem from './FileTreeItem';
 
 export default () => {
-  const [path, setPath] = useState([]);
-  const [tree, setTree] = useState({ isFile: false } as FileTree);
-  console.log('tree');
-  console.log(tree);
-
-  useEffect(() => {
-    getDefaultPath()
-      .then(_path => setPath(_path))
-      .catch(console.log);
-  }, []);
-
-  useEffect(() => {
-    if (path.length === 0) return;
-    getFileTree(path)
-      .then(setTree)
-      .catch(console.log);
-  }, [path]);
-
-  const changeDir = useCallback(() => {
-    openPathDialog(path)
-      .then((dialogRes: Electron.OpenDialogReturnValue) => {
-        const _path = dialogRes?.filePaths[0];
-        _path && setPath(_path.split(sep));
-      })
-      .catch(console.log);
-  }, [path, setPath]);
+  const { changeDir, path, tree } = useContext(FileTreeContext);
 
   return <Paper style={{ overflow: 'auto', width: '15rem' }}>
     <AppBar position="relative" style={{ height: 'auto' }}>
