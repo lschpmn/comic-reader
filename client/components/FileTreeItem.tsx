@@ -19,17 +19,20 @@ export default ({tree, path }: Props) => {
   const files = nodes.filter(node => node[1].isFile);
 
   return <>
-    {directories.map(([directory, fileTree]) => (
+    {directories.map(([directory, _tree]) => (
       <TreeItem
         key={directory}
         nodeId={directory}
         onClick={() => expand([...path, directory])}
         label={directory}
+        style={{
+          textOverflow: 'ellipsis',
+        }}
       >
-        {fileTree && (
+        {_tree.fileTree && (
           <FileTreeItem
             path={path}
-            tree={tree}
+            tree={_tree}
           />
         )}
       </TreeItem>

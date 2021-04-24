@@ -6,7 +6,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import TreeView from '@material-ui/lab/TreeView';
-import React, { useEffect, useState } from 'react';
+import { sep } from 'path';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FileTree } from '../../types';
 import { getDefaultPath, getFileTree } from '../lib/fileService';
 import { openPathDialog } from '../lib/utils';
@@ -31,15 +32,20 @@ export default () => {
       .catch(console.log);
   }, [path]);
 
+  const changeDir = useCallback(() => {
+    openPathDialog(path)
+      .then((dialogRes: Electron.OpenDialogReturnValue) => {
+        const _path = dialogRes?.filePaths[0];
+        _path && setPath(_path.split(sep));
+      })
+      .catch(console.log);
+  }, [path, setPath]);
+
   return <Paper style={{ overflow: 'auto', width: '15rem' }}>
     <AppBar position="relative" style={{ height: 'auto' }}>
       <Toolbar style={{ height: '2rem', padding: 0, minHeight: 'auto' }}>
         <IconButton
-          onClick={() => {
-            openPathDialog(path)
-              .then(console.log)
-              .catch(console.log);
-          }}
+          onClick={changeDir}
           style={{ borderRadius: 0, position: 'relative', padding: 1 }}
         >
           <FolderOpenIcon/>
