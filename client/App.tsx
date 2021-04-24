@@ -2,14 +2,19 @@ import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import SideMenu from './components/SideMenu';
+import { FileTreeContextComponent } from './contexts/FileTreeContext';
 
 const App = () => {
   const styles = useStyles();
 
-  return <div className={styles.container}>
-    <SideMenu/>
-    <h1>Hello World</h1>
-  </div>;
+  return (
+    <FileTreeContextComponent>
+      <div className={styles.container}>
+        <SideMenu/>
+        <h1>Hello World</h1>
+      </div>
+    </FileTreeContextComponent>
+  );
 };
 
 const useStyles = makeStyles(({ palette }) => ({

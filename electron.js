@@ -40,7 +40,7 @@ app.on('window-all-closed', () => {
   else createWindow();
 });
 
-ipcMain.handle('select-directory', async (path) => {
+ipcMain.handle('select-directory', async (event, path) => {
   try {
     return await dialog.showOpenDialog({
       defaultPath: path,
