@@ -1,32 +1,33 @@
 import { readdir, stat } from 'fs-extra';
-import { join, sep } from 'path';
-import { FileTree } from '../types';
+import { join } from 'path';
+import { FileShrub } from '../types';
 
 console.log(__dirname);
 
-export function getDefaultPath(): string[] {
-  return join(__dirname, '..').split(sep);
+export function getDefaultPath(): string {
+  return join(__dirname, '..');
 }
 
-export async function getFileTree(path: string): Promise<FileTree> {
+export async function getFileShrub(path: string): Promise<FileShrub> {
   try {
     const list = await readdir(path);
-    const fileTree = {};
-    const fileTreePromises = list.map(async node => {
+    const fileShrub = {
+      [path]: { isFile: false, branches: [] },
+    } as FileShrub;
+    const fileShrubPromises = list.map(async node => {
       try {
-        const info = await stat(join(path, node));
-        fileTree[node] = { isFile: info.isFile() };
+        const nodePath = join(path, node);
+        const info = await stat(nodePath);
+        fileShrub[nodePath] = { isFile: info.isFile() };
+        fileShrub[path].branches.push(nodePath);
       } catch (err) {
         console.log(`error with ${node}`);
         console.log(err);
       }
     });
-    await Promise.all(fileTreePromises);
+    await Promise.all(fileShrubPromises);
 
-    return {
-      isFile: false,
-      fileTree,
-    };
+    return fileShrub;
   } catch (err) {
     console.log('listFiles error');
     console.log(err);

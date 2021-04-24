@@ -6,23 +6,24 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import TreeView from '@material-ui/lab/TreeView';
+import { basename } from 'path';
 import React, { useContext } from 'react';
-import FileTreeContext from '../contexts/FileTreeContext';
-import FileTreeItem from './FileTreeItem';
+import FileContext from '../contexts/FileContext';
+import FileItem from './FileItem';
 
 export default () => {
-  const { changeDir, path, tree } = useContext(FileTreeContext);
+  const { changeDir, fileShrub, path } = useContext(FileContext);
 
   return <Paper style={{ overflow: 'auto', width: '15rem' }}>
     <AppBar position="relative" style={{ height: 'auto' }}>
       <Toolbar style={{ height: '2rem', padding: 0, minHeight: 'auto' }}>
         <IconButton
           onClick={changeDir}
-          style={{ borderRadius: 0, position: 'relative', padding: 1 }}
+          style={{ borderRadius: 0, position: 'relative', padding: '0.25rem' }}
         >
           <FolderOpenIcon/>
         </IconButton>
-        <span style={{ fontSize: '1rem', textAlign: 'center' }}>{path.slice(-1)[0]}</span>
+        <span style={{ fontSize: '1rem', textAlign: 'center' }}>{basename(path)}</span>
       </Toolbar>
     </AppBar>
 
@@ -32,10 +33,10 @@ export default () => {
       defaultExpandIcon={<ChevronRightIcon/>}
       defaultEndIcon={<ChevronRightIcon/>}
     >
-      {tree.fileTree && (
-        <FileTreeItem
+      {fileShrub[path]?.branches && (
+        <FileItem
+          fileShrub={fileShrub}
           path={path}
-          tree={tree}
         />
       )}
     </TreeView>

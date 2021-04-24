@@ -4,7 +4,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import SettingsIcon from '@material-ui/icons/Settings';
 import React, { useCallback, useState } from 'react';
-import FileTreeSidePanel from './FileTreeSidePanel';
+import FileSidePanel from './FileSidePanel';
 
 export default () => {
   const [openTree, setOpenTree] = useState(false);
@@ -13,7 +13,7 @@ export default () => {
   const onTreeClick = useCallback(() => setOpenTree(!openTree), [openTree]);
 
   return <div style={{ display: 'flex' }}>
-    {openTree && <FileTreeSidePanel />}
+    {openTree && <FileSidePanel />}
 
     <Paper className={styles.container}>
       <IconButton className={styles.icons} size="small" onClick={onTreeClick}>

@@ -1,8 +1,7 @@
 import { createServer } from 'http';
-import { join } from 'path';
 import * as socket from 'socket.io';
 import { FILE_GET_DEFAULT, FILE_LIST } from '../constants';
-import { getDefaultPath, getFileTree } from './file-service';
+import { getDefaultPath, getFileShrub } from './file-service';
 
 const PORT = +process.argv[process.argv.indexOf('--port') + 1];
 
@@ -25,7 +24,7 @@ io.on('connection', (socket: socket.Socket) => {
 
   socket.on(FILE_GET_DEFAULT, (res) => res(getDefaultPath()));
 
-  socket.on(FILE_LIST, (path: string[], res) => getFileTree(join(...path)).then(files => res(files)));
+  socket.on(FILE_LIST, (path: string, res) => getFileShrub(path).then(files => res(files)));
 });
 
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`));

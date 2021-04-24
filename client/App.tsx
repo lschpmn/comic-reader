@@ -2,18 +2,18 @@ import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import SideMenu from './components/SideMenu';
-import { FileTreeContextComponent } from './contexts/FileTreeContext';
+import { FileContextComponent } from './contexts/FileContext';
 
 const App = () => {
   const styles = useStyles();
 
   return (
-    <FileTreeContextComponent>
+    <FileContextComponent>
       <div className={styles.container}>
         <SideMenu/>
         <h1>Hello World</h1>
       </div>
-    </FileTreeContextComponent>
+    </FileContextComponent>
   );
 };
 
