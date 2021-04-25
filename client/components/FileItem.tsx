@@ -4,6 +4,7 @@ import { basename } from 'path';
 import React, { useContext } from 'react';
 import { FileShrub } from '../../types';
 import FileContext from '../contexts/FileContext';
+import { useNodes } from '../lib/utils';
 import FileItem from './FileItem';
 
 type Props = {
@@ -15,9 +16,7 @@ export default ({ fileShrub, path }: Props) => {
   const classes = useStyles();
   const { expand } = useContext(FileContext);
 
-  const nodes = fileShrub[path].branches.sort(sortNames);
-  const directories = nodes.filter(node => !fileShrub[node].isFile);
-  const files = nodes.filter(node => fileShrub[node].isFile);
+  const [directories, files] = useNodes(fileShrub, fileShrub[path]?.branches);
 
   return <>
     {directories.map(directory => (
@@ -66,5 +65,3 @@ const useStyles = makeStyles({
     textOverflow: 'ellipsis',
   },
 });
-
-const sortNames = (nameA: string, nameB: string): number => nameA.localeCompare(nameB);
