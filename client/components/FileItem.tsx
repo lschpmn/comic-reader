@@ -33,11 +33,13 @@ export default ({ fileShrub, path }: Props) => {
           textOverflow: 'ellipsis',
         }}
       >
-        {fileShrub[directory].branches && (
+        {fileShrub[directory].branches ? (
           <FileItem
             path={directory}
             fileShrub={fileShrub}
           />
+        ) : (
+          <TreeItem nodeId={`empty-${path}`} label='Loading' />
         )}
       </TreeItem>
     ))}
