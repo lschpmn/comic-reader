@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core';
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
+import MainWindow from './components/MainWindow';
 import SideMenu from './components/SideMenu';
 import { FileContextComponent } from './contexts/FileContext';
 
@@ -11,7 +12,7 @@ const App = () => {
     <FileContextComponent>
       <div className={styles.container}>
         <SideMenu/>
-        <h1>Hello World</h1>
+        <MainWindow/>
       </div>
     </FileContextComponent>
   );
