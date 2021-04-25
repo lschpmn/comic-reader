@@ -27,8 +27,9 @@ export const FileContextComponent = ({ children }) => {
 
   useEffect(() => {
     if (path.length === 0) return;
+    if (fileShrub[path]?.branches) return;
     getFileShrub(path)
-      .then(setFileShrub)
+      .then(_fileShrub => setFileShrub({ ...fileShrub, ..._fileShrub }))
       .catch(console.log);
   }, [path]);
 

@@ -4,7 +4,6 @@ import { basename } from 'path';
 import React, { useContext } from 'react';
 import { FileShrub } from '../../types';
 import FileContext from '../contexts/FileContext';
-import { useNodes } from '../lib/utils';
 import FileItem from './FileItem';
 
 type Props = {
@@ -16,44 +15,30 @@ export default ({ fileShrub, path }: Props) => {
   const classes = useStyles();
   const { expand } = useContext(FileContext);
 
-  const [directories, files] = useNodes(fileShrub, fileShrub[path]?.branches);
+  const nodes = fileShrub[path]?.branches || [];
 
   return <>
-    {directories.map(directory => (
-      <TreeItem
-        classes={{
-          label: classes.labels,
-        }}
-        key={directory}
-        nodeId={directory}
-        onClick={() => expand(directory)}
-        label={basename(directory)}
-        style={{
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {fileShrub[directory].branches ? (
-          <FileItem
-            path={directory}
-            fileShrub={fileShrub}
-          />
-        ) : (
-          <TreeItem nodeId={`empty-${path}`} label='Loading' />
-        )}
-      </TreeItem>
-    ))}
-
-    {files.map(file => (
+    {nodes.map(node => (
       <TreeItem
         classes={{
           label: classes.labels,
         }}
         endIcon={<span/>}
-        key={file}
-        nodeId={file}
-        onClick={() => expand(file)}
-        label={basename(file)}
-      />
+        key={node}
+        nodeId={node}
+        onClick={() => expand(node)}
+        label={basename(node)}
+        style={{
+          textOverflow: 'ellipsis',
+        }}
+      >
+        {!fileShrub[node].isFile && (
+          <FileItem
+            path={node}
+            fileShrub={fileShrub}
+          />
+        )}
+      </TreeItem>
     ))}
   </>;
 };
