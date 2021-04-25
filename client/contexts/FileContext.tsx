@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { FileShrub } from '../../types';
-import { getDefaultPath, getFileShrub } from '../lib/fileService';
+import { getDefaultPath, getFileShrub, setBasePath } from '../lib/fileService';
 import { openPathDialog } from '../lib/utils';
 
 const FileContext = createContext({
@@ -27,6 +27,7 @@ export const FileContextComponent = ({ children }) => {
 
   useEffect(() => {
     if (path.length === 0) return;
+    setBasePath(path);
     if (fileShrub[path]?.branches) return;
     getFileShrub(path)
       .then(_fileShrub => setFileShrub({ ...fileShrub, ..._fileShrub }))

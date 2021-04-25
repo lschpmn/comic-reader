@@ -13,7 +13,7 @@ export default () => {
     {nodes.map(node => (
       <WindowItem
         key={node}
-        path={node}
+        itemPath={node}
       />
     ))}
   </div>;

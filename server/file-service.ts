@@ -3,7 +3,7 @@ import { join } from 'path';
 import { FileShrub } from '../types';
 import { Application } from 'express';
 
-let basePath;
+let basePath = '';
 
 export function getDefaultPath(): string {
   return join(__dirname, '..');
@@ -51,7 +51,10 @@ export function setApp(app: Application) {
     console.log(req.path);
     console.log(req.params);
 
-    res.send('test');
+    res.sendFile(join(basePath, req.params[0]));
   });
+}
 
+export function setBasePath(newBasePath: string) {
+  basePath = newBasePath;
 }
