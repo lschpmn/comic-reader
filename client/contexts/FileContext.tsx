@@ -27,7 +27,6 @@ export const FileContextComponent = ({ children }) => {
 
   useEffect(() => {
     if (path.length === 0) return;
-    setBasePath(path);
     if (fileShrub[path]?.branches) return;
     getFileShrub(path)
       .then(_fileShrub => setFileShrub({ ...fileShrub, ..._fileShrub }))
@@ -38,7 +37,10 @@ export const FileContextComponent = ({ children }) => {
     openPathDialog(path)
       .then((dialogRes: Electron.OpenDialogReturnValue) => {
         const _path = dialogRes?.filePaths[0];
-        _path && setPath(_path);
+        if (_path) {
+          setBasePath(_path);
+          setPath(_path);
+        }
       })
       .catch(console.log);
   }, [path, setPath]);
@@ -46,14 +48,14 @@ export const FileContextComponent = ({ children }) => {
   const expand = useCallback((_path: string) => {
     getFileShrub(_path)
       .then(_fileShrub => {
-        setFileShrub({
-          ...fileShrub,
+        setFileShrub(oldFileShrub => ({
+          ...oldFileShrub,
           ..._fileShrub,
-        })
+        }))
       })
       .catch(console.log);
 
-  }, [fileShrub, setFileShrub]);
+  }, [setFileShrub]);
 
   return <FileContext.Provider value={{ changeDir, expand, fileShrub, path }}>
     {children}
