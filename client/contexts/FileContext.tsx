@@ -16,8 +16,6 @@ export const FileContextComponent = ({ children }) => {
 
   console.log('path');
   console.log(path);
-  console.log('fileShrub');
-  console.log(fileShrub);
 
   useEffect(() => {
     getDefaultPath()
@@ -29,9 +27,16 @@ export const FileContextComponent = ({ children }) => {
     if (path.length === 0) return;
     if (fileShrub[path]?.branches) return;
     getFileShrub(path)
-      .then(_fileShrub => setFileShrub({ ...fileShrub, ..._fileShrub }))
+      .then(_fileShrub => setFileShrub(oldFileShrub => ({ ...oldFileShrub, ..._fileShrub })))
       .catch(console.log);
-  }, [path]);
+  }, [path, setFileShrub]);
+
+  useEffect(() => {
+    const node = fileShrub[path]
+      ?.branches
+      ?.find(branch => !fileShrub[branch].isFile && !fileShrub[branch].branches);
+    node && expand(node);
+  }, [fileShrub, path]);
 
   const changeDir = useCallback(() => {
     openPathDialog(path)
@@ -51,7 +56,7 @@ export const FileContextComponent = ({ children }) => {
         setFileShrub(oldFileShrub => ({
           ...oldFileShrub,
           ..._fileShrub,
-        }))
+        }));
       })
       .catch(console.log);
 

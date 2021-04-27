@@ -1,4 +1,4 @@
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
@@ -25,49 +25,48 @@ export default ({ itemPath }: Props) => {
   firstImage && console.log(firstImage);
   relativePath && console.log(relativePath);
 
-  return <div key={itemPath} className={classes.container}>
-    {!isFile && !relativePath && (
-      <>
-        <IconButton style={{ borderRadius: 0, padding: '0 1rem' }} onClick={() => console.log('clicked')}>
-          <FolderIcon/>
-        </IconButton>
-        <div>{basename(itemPath)}</div>
-      </>
-    )}
-    {!isFile && relativePath && (
-      <>
+  return <Button key={itemPath} className={classes.container}>
+    <>
+      {!isFile && !relativePath && (
+        <FolderIcon/>
+      )}
+      {!isFile && relativePath && (
         <img
-          style={{ maxHeight: '10rem', maxWidth: '7rem' }}
+          title={basename(itemPath)}
+          style={{ maxHeight: '10rem', width: '7rem' }}
           src={`http://localhost:${port}/static/${relativePath}`}
         />
-        <div>{basename(itemPath)}</div>
-      </>
-    )}
-
-    {isFile && !isImage && (
-      <>
-        <IconButton style={{ borderRadius: 0, padding: '0 1rem' }} onClick={() => console.log('clicked')}>
-          <DescriptionIcon/>
-        </IconButton>
-        <div>{basename(itemPath)}</div>
-      </>
-    )}
-    {isImage && (
-      <>
-        <IconButton style={{ borderRadius: 0, padding: '0 1rem' }} onClick={() => console.log('clicked')}>
-          <ImageIcon/>
-        </IconButton>
-        <div>{basename(itemPath)}</div>
-      </>
-    )}
-  </div>;
+      )}
+      {isFile && !isImage && (
+        <DescriptionIcon/>
+      )}
+      {isImage && (
+        <ImageIcon/>
+      )}
+    </>
+    <div className={classes.label}>{basename(itemPath)}</div>
+  </Button>;
 };
 
 const useStyles = makeStyles({
   container: {
+    height: '12rem',
+    padding: '0.25rem',
     width: '8rem',
+    '& > span': {
+      display: 'flex',
+      justifyContent: 'space-between',
+      flexDirection: 'column',
+    },
     '& svg': {
       fontSize: '6rem',
     },
+  },
+  label: {
+    height: '1.5rem',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    width: '100%',
   },
 });
