@@ -11,7 +11,7 @@ export function getDefaultPath(): string {
 
 export async function getFileShrub(path: string): Promise<FileShrub> {
   try {
-    const list = (await readdir(path));
+    const list = await readdir(path);
     const fileShrub = {
       [path]: { isFile: false, branches: [] },
     } as FileShrub;

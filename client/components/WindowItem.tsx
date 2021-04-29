@@ -26,14 +26,15 @@ export default ({ itemPath }: Props) => {
   relativePath && console.log(relativePath);
 
   return <Button key={itemPath} className={classes.container}>
-    <>
+    <div className={classes.icon}>
       {!isFile && !relativePath && (
         <FolderIcon/>
       )}
       {!isFile && relativePath && (
         <img
+          loading='lazy'
           title={basename(itemPath)}
-          style={{ maxHeight: '10rem', width: '7rem' }}
+          style={{ maxHeight: '100%', maxWidth: '100%' }}
           src={`http://localhost:${port}/static/${relativePath}`}
         />
       )}
@@ -43,27 +44,35 @@ export default ({ itemPath }: Props) => {
       {isImage && (
         <ImageIcon/>
       )}
-    </>
+    </div>
     <div className={classes.label}>{basename(itemPath)}</div>
   </Button>;
 };
 
 const useStyles = makeStyles({
   container: {
-    height: '12rem',
-    padding: '0.25rem',
-    width: '8rem',
+    height: '22rem',
+    margin: '1rem',
+    width: '15rem',
     '& > span': {
       display: 'flex',
       justifyContent: 'space-between',
       flexDirection: 'column',
     },
     '& svg': {
-      fontSize: '6rem',
+      fontSize: '10rem',
     },
   },
+  icon: {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    height: '20rem',
+    justifyContent: 'center',
+    width: '15rem',
+  },
   label: {
-    height: '1.5rem',
+    height: '2rem',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',

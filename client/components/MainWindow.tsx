@@ -23,6 +23,7 @@ const useStyles = makeStyles({
   container: {
     alignContent: 'start',
     display: 'flex',
+    justifyContent: 'center',
     overflow: 'auto',
     flexWrap: 'wrap',
     textAlign: 'center',
