@@ -2,7 +2,6 @@ import Button from '@material-ui/core/Button';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
-import ImageIcon from '@material-ui/icons/Image';
 import { basename, relative } from 'path';
 import React, { useContext } from 'react';
 import FileContext from '../contexts/FileContext';
@@ -21,7 +20,7 @@ export default ({ itemPath }: Props) => {
   const classes = useStyles();
 
   const firstImage = fileShrub[itemPath].branches?.find(testImagePath);
-  const relativePath = firstImage && relative(path, firstImage);
+  const relativePath = relative(path, firstImage || itemPath);
   firstImage && console.log(firstImage);
   relativePath && console.log(relativePath);
 
@@ -30,9 +29,9 @@ export default ({ itemPath }: Props) => {
       {!isFile && !relativePath && (
         <FolderIcon/>
       )}
-      {!isFile && relativePath && (
+      {(!isFile && relativePath || isImage) && (
         <img
-          loading='lazy'
+          loading="lazy"
           title={basename(itemPath)}
           style={{ maxHeight: '100%', maxWidth: '100%' }}
           src={`http://localhost:${port}/static/${relativePath}`}
@@ -40,9 +39,6 @@ export default ({ itemPath }: Props) => {
       )}
       {isFile && !isImage && (
         <DescriptionIcon/>
-      )}
-      {isImage && (
-        <ImageIcon/>
       )}
     </div>
     <div className={classes.label}>{basename(itemPath)}</div>

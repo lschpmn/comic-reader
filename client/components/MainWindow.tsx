@@ -21,7 +21,6 @@ export default () => {
 
 const useStyles = makeStyles({
   container: {
-    alignContent: 'start',
     display: 'flex',
     justifyContent: 'center',
     overflow: 'auto',
