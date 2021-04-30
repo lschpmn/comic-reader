@@ -3,33 +3,35 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
 import { basename, relative } from 'path';
-import React, { useContext } from 'react';
-import FileContext from '../contexts/FileContext';
+import React, { useCallback } from 'react';
+import { FileShrub } from '../../types';
 import { testImagePath } from '../lib/utils';
 
 const port: number = (window as any).__PORT__;
 
 type Props = {
+  changePath: (path: string) => void,
+  fileShrub: FileShrub,
   itemPath: string,
+  path: string,
 };
 
-export default ({ itemPath }: Props) => {
-  const { fileShrub, path } = useContext(FileContext);
+export default ({ changePath, fileShrub, itemPath, path }: Props) => {
   const { isFile } = fileShrub[itemPath];
   const isImage = testImagePath(itemPath);
   const classes = useStyles();
 
+  const onClick = useCallback(() => changePath(itemPath), [changePath, itemPath]);
+
   const firstImage = fileShrub[itemPath].branches?.find(testImagePath);
   const relativePath = relative(path, firstImage || itemPath);
-  firstImage && console.log(firstImage);
-  relativePath && console.log(relativePath);
 
-  return <Button key={itemPath} className={classes.container}>
+  return <Button key={itemPath} className={classes.container} onDoubleClick={onClick}>
     <div className={classes.icon}>
-      {!isFile && !relativePath && (
+      {!isFile && !firstImage && (
         <FolderIcon/>
       )}
-      {(!isFile && relativePath || isImage) && (
+      {(!isFile && firstImage || isImage) && (
         <img
           loading="lazy"
           title={basename(itemPath)}
@@ -47,9 +49,9 @@ export default ({ itemPath }: Props) => {
 
 const useStyles = makeStyles({
   container: {
-    height: '22rem',
+    height: '18rem',
     margin: '1rem',
-    width: '15rem',
+    width: '12rem',
     '& > span': {
       display: 'flex',
       justifyContent: 'space-between',
@@ -63,9 +65,9 @@ const useStyles = makeStyles({
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
-    height: '20rem',
+    height: '16rem',
     justifyContent: 'center',
-    width: '15rem',
+    width: '12rem',
   },
   label: {
     height: '2rem',

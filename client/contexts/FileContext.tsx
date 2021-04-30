@@ -5,6 +5,7 @@ import { openPathDialog, testImagePath } from '../lib/utils';
 
 const FileContext = createContext({
   changeDir: () => undefined,
+  changePath: (path: string) => undefined,
   expand: (path: string) => undefined,
   fileShrub: {} as FileShrub,
   path: '',
@@ -38,17 +39,21 @@ export const FileContextComponent = ({ children }) => {
     node && expand(node);
   }, [fileShrub, path]);
 
+  const changePath = useCallback((_path: string) => {
+    setBasePath(_path);
+    setTimeout(() => setPath(_path), 150); //just giving socket.io some time
+  }, [setPath]);
+
   const changeDir = useCallback(() => {
     openPathDialog(path)
       .then((dialogRes: Electron.OpenDialogReturnValue) => {
         const _path = dialogRes?.filePaths[0];
         if (_path) {
-          setBasePath(_path);
-          setPath(_path);
+          changePath(_path);
         }
       })
       .catch(console.log);
-  }, [path, setPath]);
+  }, [changePath, path]);
 
   const expand = useCallback((_path: string) => {
     getFileShrub(_path)
@@ -62,7 +67,7 @@ export const FileContextComponent = ({ children }) => {
 
   }, [setFileShrub]);
 
-  return <FileContext.Provider value={{ changeDir, expand, fileShrub, path }}>
+  return <FileContext.Provider value={{ changeDir, changePath, expand, fileShrub, path }}>
     {children}
   </FileContext.Provider>;
 };
