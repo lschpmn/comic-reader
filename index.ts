@@ -34,9 +34,12 @@ function startElectron(port: number) {
 function startNodemon(port: number) {
   console.log('Starting server');
   nodemon({
-    script: join(__dirname, 'server', 'index.ts'),
     args: ['--port', port.toString()],
     ext: 'ts',
+    execMap: {
+      'ts': join(__dirname, 'node_modules', '.bin', 'ts-node.cmd'),
+    },
+    script: join(__dirname, 'server', 'index.ts'),
     watch: [join(__dirname, 'server')],
   });
 }
