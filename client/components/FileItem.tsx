@@ -1,19 +1,19 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import TreeItem from '@material-ui/lab/TreeItem';
 import { basename } from 'path';
-import React, { useContext } from 'react';
+import React from 'react';
 import { FileShrub } from '../../types';
-import FileContext from '../contexts/FileContext';
 import FileItem from './FileItem';
 
 type Props = {
+  expand: (path: string) => undefined,
   fileShrub: FileShrub,
+  setSelected: (path: string) => undefined,
   path: string,
 };
 
-export default ({ fileShrub, path }: Props) => {
+export default ({ expand, fileShrub, setSelected, path }: Props) => {
   const classes = useStyles();
-  const { expand } = useContext(FileContext);
 
   const nodes = fileShrub[path]?.branches || [];
 
@@ -26,16 +26,19 @@ export default ({ fileShrub, path }: Props) => {
         endIcon={<span/>}
         key={node}
         nodeId={node}
-        onClick={() => expand(node)}
-        label={basename(node)}
-        style={{
-          textOverflow: 'ellipsis',
+        onIconClick={() => expand(node)}
+        onLabelClick={(e) => {
+          e.preventDefault();
+          setSelected(node);
         }}
+        label={basename(node)}
       >
         {!fileShrub[node].isFile && (
           <FileItem
-            path={node}
+            expand={expand}
             fileShrub={fileShrub}
+            path={node}
+            setSelected={setSelected}
           />
         )}
       </TreeItem>

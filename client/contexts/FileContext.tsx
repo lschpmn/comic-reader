@@ -28,21 +28,6 @@ export const FileContextComponent = ({ children }) => {
       .catch(console.log);
   }, []);
 
-  useEffect(() => {
-    if (path.length === 0) return;
-    if (fileShrub[path]?.branches || testImagePath(path)) return;
-    getFileShrub(path)
-      .then(_fileShrub => setFileShrub(oldFileShrub => ({ ...oldFileShrub, ..._fileShrub })))
-      .catch(console.log);
-  }, [path, setFileShrub]);
-
-  useEffect(() => {
-    const node = fileShrub[path]
-      ?.branches
-      ?.find(branch => !fileShrub[branch].isFile && !fileShrub[branch].branches);
-    node && expand(node);
-  }, [fileShrub, path]);
-
   const changeDir = useCallback(() => {
     openPathDialog(path)
       .then((dialogRes: Electron.OpenDialogReturnValue) => {
@@ -69,6 +54,26 @@ export const FileContextComponent = ({ children }) => {
       .catch(console.log);
 
   }, [setFileShrub]);
+
+  useEffect(() => {
+    if (!!path && !fileShrub[path]?.branches) {
+      expand(path);
+    }
+    if (!!selected && !fileShrub[selected]?.branches && !testImagePath(selected)) {
+      expand(selected);
+    }
+  }, [expand, path, selected]);
+
+  useEffect(() => {
+    const nodePath = fileShrub[path]
+      ?.branches
+      ?.find(branch => !fileShrub[branch].isFile && !fileShrub[branch].branches);
+    nodePath && expand(nodePath);
+    const nodeSelected = fileShrub[selected]
+      ?.branches
+      ?.find(branch => !fileShrub[branch].isFile && !fileShrub[branch].branches);
+    nodeSelected && expand(nodeSelected);
+  }, [expand, fileShrub, path, selected]);
 
   return <FileContext.Provider value={{ changeDir, expand, fileShrub, path, selected, setSelected }}>
     {children}

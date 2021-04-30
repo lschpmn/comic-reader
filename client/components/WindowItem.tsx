@@ -12,16 +12,16 @@ const port: number = (window as any).__PORT__;
 type Props = {
   fileShrub: FileShrub,
   itemPath: string,
-  onClick: (path: string) => void,
+  setSelected: (path: string) => void,
   path: string,
 };
 
-export default ({ onClick, fileShrub, itemPath, path }: Props) => {
+export default ({ setSelected, fileShrub, itemPath, path }: Props) => {
   const { isFile } = fileShrub[itemPath];
   const isImage = testImagePath(itemPath);
   const classes = useStyles();
 
-  const onClickCallback = useCallback(() => onClick(itemPath), [onClick, itemPath]);
+  const onClickCallback = useCallback(() => setSelected(itemPath), [setSelected, itemPath]);
 
   const firstImage = fileShrub[itemPath].branches?.find(testImagePath);
   const relativePath = relative(path, firstImage || itemPath);

@@ -1,5 +1,5 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import FileContext from '../contexts/FileContext';
 import { testImagePath } from '../lib/utils';
 import ImageView from './ImageView';
@@ -8,11 +8,14 @@ import WindowItem from './WindowItem';
 export default () => {
   const { fileShrub, path, selected, setSelected } = useContext(FileContext);
   const classes = useStyles();
+  const main = useRef(null);
 
-  const isImage = testImagePath(selected || path);
+  const isImage = testImagePath(selected);
   const nodes = fileShrub[selected || path]?.branches || [];
 
-  return <div className={classes.container}>
+  useEffect(() => main?.current?.scrollTo(0, 0), [selected, path]);
+
+  return <div className={classes.container} ref={main}>
     {isImage && (
       <ImageView
         path={path}
@@ -24,7 +27,7 @@ export default () => {
         key={node}
         fileShrub={fileShrub}
         itemPath={node}
-        onClick={setSelected}
+        setSelected={setSelected}
         path={path}
       />
     ))}
