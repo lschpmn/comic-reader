@@ -6,24 +6,25 @@ import ImageView from './ImageView';
 import WindowItem from './WindowItem';
 
 export default () => {
-  const { changePath, fileShrub, path } = useContext(FileContext);
+  const { fileShrub, path, selected, setSelected } = useContext(FileContext);
   const classes = useStyles();
 
-  const isImage = testImagePath(path);
-  const nodes = fileShrub[path]?.branches || [];
+  const isImage = testImagePath(selected || path);
+  const nodes = fileShrub[selected || path]?.branches || [];
 
   return <div className={classes.container}>
     {isImage && (
       <ImageView
         path={path}
+        selected={selected}
       />
     )}
     {nodes.map(node => (
       <WindowItem
         key={node}
-        changePath={changePath}
         fileShrub={fileShrub}
         itemPath={node}
+        onClick={setSelected}
         path={path}
       />
     ))}

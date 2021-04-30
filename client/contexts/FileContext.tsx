@@ -5,18 +5,22 @@ import { openPathDialog, testImagePath } from '../lib/utils';
 
 const FileContext = createContext({
   changeDir: () => undefined,
-  changePath: (path: string) => undefined,
   expand: (path: string) => undefined,
   fileShrub: {} as FileShrub,
   path: '',
+  selected: '',
+  setSelected: (path: string) => undefined,
 });
 
 export const FileContextComponent = ({ children }) => {
-  const [path, setPath] = useState('');
   const [fileShrub, setFileShrub] = useState({} as FileShrub);
+  const [path, setPath] = useState('');
+  const [selected, setSelected] = useState('');
 
   console.log('path');
   console.log(path);
+  console.log('selected');
+  console.log(selected);
 
   useEffect(() => {
     getDefaultPath()
@@ -39,21 +43,20 @@ export const FileContextComponent = ({ children }) => {
     node && expand(node);
   }, [fileShrub, path]);
 
-  const changePath = useCallback((_path: string) => {
-    setBasePath(_path);
-    setTimeout(() => setPath(_path), 150); //just giving socket.io some time
-  }, [setPath]);
-
   const changeDir = useCallback(() => {
     openPathDialog(path)
       .then((dialogRes: Electron.OpenDialogReturnValue) => {
         const _path = dialogRes?.filePaths[0];
         if (_path) {
-          changePath(_path);
+          setBasePath(_path);
+          setTimeout(() => {
+            setPath(_path);
+            setSelected('');
+          }, 150); //just giving socket.io some time
         }
       })
       .catch(console.log);
-  }, [changePath, path]);
+  }, [setPath, path]);
 
   const expand = useCallback((_path: string) => {
     getFileShrub(_path)
@@ -67,7 +70,7 @@ export const FileContextComponent = ({ children }) => {
 
   }, [setFileShrub]);
 
-  return <FileContext.Provider value={{ changeDir, changePath, expand, fileShrub, path }}>
+  return <FileContext.Provider value={{ changeDir, expand, fileShrub, path, selected, setSelected }}>
     {children}
   </FileContext.Provider>;
 };

@@ -10,23 +10,23 @@ import { testImagePath } from '../lib/utils';
 const port: number = (window as any).__PORT__;
 
 type Props = {
-  changePath: (path: string) => void,
   fileShrub: FileShrub,
   itemPath: string,
+  onClick: (path: string) => void,
   path: string,
 };
 
-export default ({ changePath, fileShrub, itemPath, path }: Props) => {
+export default ({ onClick, fileShrub, itemPath, path }: Props) => {
   const { isFile } = fileShrub[itemPath];
   const isImage = testImagePath(itemPath);
   const classes = useStyles();
 
-  const onClick = useCallback(() => changePath(itemPath), [changePath, itemPath]);
+  const onClickCallback = useCallback(() => onClick(itemPath), [onClick, itemPath]);
 
   const firstImage = fileShrub[itemPath].branches?.find(testImagePath);
   const relativePath = relative(path, firstImage || itemPath);
 
-  return <Button key={itemPath} className={classes.container} onDoubleClick={onClick}>
+  return <Button key={itemPath} className={classes.container} onDoubleClick={onClickCallback}>
     <div className={classes.icon}>
       {!isFile && !firstImage && (
         <FolderIcon/>
@@ -49,9 +49,9 @@ export default ({ changePath, fileShrub, itemPath, path }: Props) => {
 
 const useStyles = makeStyles({
   container: {
-    height: '18rem',
-    margin: '1rem',
-    width: '12rem',
+    height: '17rem',
+    margin: '0.5rem',
+    width: '15rem',
     '& > span': {
       display: 'flex',
       justifyContent: 'space-between',
@@ -65,9 +65,9 @@ const useStyles = makeStyles({
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
-    height: '16rem',
+    height: '15rem',
     justifyContent: 'center',
-    width: '12rem',
+    width: '15rem',
   },
   label: {
     height: '2rem',

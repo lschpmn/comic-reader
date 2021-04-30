@@ -12,7 +12,7 @@ import FileContext from '../contexts/FileContext';
 import FileItem from './FileItem';
 
 export default () => {
-  const { changeDir, fileShrub, path } = useContext(FileContext);
+  const { changeDir, fileShrub, path, selected } = useContext(FileContext);
 
   return <Paper style={{ overflow: 'auto', width: '15rem' }}>
     <AppBar position="relative" style={{ height: 'auto' }}>
@@ -32,6 +32,7 @@ export default () => {
       defaultCollapseIcon={<ExpandMoreIcon/>}
       defaultExpandIcon={<ChevronRightIcon/>}
       defaultEndIcon={<ChevronRightIcon/>}
+      selected={[selected]}
     >
       {fileShrub[path]?.branches && (
         <FileItem
