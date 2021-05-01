@@ -18,8 +18,10 @@ export default () => {
   return <div className={classes.container} ref={main}>
     {isImage && (
       <ImageView
+        fileShrub={fileShrub}
         path={path}
         selected={selected}
+        setSelected={setSelected}
       />
     )}
     {nodes.map(node => (

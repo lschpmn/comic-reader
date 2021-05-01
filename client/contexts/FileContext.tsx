@@ -35,8 +35,8 @@ export const FileContextComponent = ({ children }) => {
         if (_path) {
           setBasePath(_path);
           setTimeout(() => {
-            setPath(_path);
             setSelected('');
+            setPath(_path);
           }, 150); //just giving socket.io some time
         }
       })
