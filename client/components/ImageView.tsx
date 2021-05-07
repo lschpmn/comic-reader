@@ -18,9 +18,9 @@ const previousButtons = ['ArrowUp', 'ArrowLeft', 'Backspace'];
 export default ({ fileShrub, path, selected, setSelected }: Props) => {
   const classes = useStyles();
   const directory = dirname(selected);
-  const index = fileShrub[directory].branches.findIndex(branch => branch === selected);
-  const next = fileShrub[directory].branches[index + 1];
-  const previous = fileShrub[directory].branches[index - 1];
+  const index = fileShrub[directory]?.branches?.findIndex(branch => branch === selected);
+  const next = fileShrub[directory]?.branches[index + 1];
+  const previous = fileShrub[directory]?.branches[index - 1];
   const relativePath = relative(path, selected);
 
   useEffect(() => {
@@ -34,6 +34,15 @@ export default ({ fileShrub, path, selected, setSelected }: Props) => {
   }, [next, previous, setSelected]);
 
   return <div className={classes.container}>
+    <div
+      className={classes.clickOverlay}
+      onClick={() => previous && setSelected(previous)}
+    />
+    <div
+      className={classes.clickOverlay}
+      onClick={() => next && setSelected(next)}
+      style={{ right: 0 }}
+    />
     <img
       className={classes.image}
       src={`http://localhost:${port}/static/${relativePath}`}
@@ -42,8 +51,14 @@ export default ({ fileShrub, path, selected, setSelected }: Props) => {
 };
 
 const useStyles = makeStyles({
+  clickOverlay: {
+    position: 'absolute',
+    height: '100%',
+    width: '50%',
+  },
   container: {
     height: '100%',
+    position: 'relative',
     width: '100%',
   },
   image: {

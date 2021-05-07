@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import MainWindow from './components/MainWindow';
