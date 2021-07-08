@@ -36,7 +36,7 @@ export default ({ setSelected, fileShrub, itemPath, path }: Props) => {
           loading="lazy"
           title={basename(itemPath)}
           style={{ maxHeight: '100%', maxWidth: '100%' }}
-          src={`http://localhost:${port}/static/${relativePath}`}
+          src={`http://localhost:${port}/static/${relativePath}?h=240&w=240`}
         />
       )}
       {isFile && !isImage && (

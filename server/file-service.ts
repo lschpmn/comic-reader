@@ -1,7 +1,8 @@
+import { Application } from 'express';
 import { readdir, stat } from 'fs-extra';
 import { join } from 'path';
+import * as sharp from 'sharp';
 import { FileShrub } from '../types';
-import { Application } from 'express';
 
 let basePath = '';
 
@@ -36,7 +37,7 @@ export async function getFileShrub(path: string): Promise<FileShrub> {
         if (isFileA && !isFileB) return 1;
         if (!isFileA && isFileB) return -1;
 
-        return nameA.localeCompare(nameB, undefined, { numeric: true })
+        return nameA.localeCompare(nameB, undefined, { numeric: true });
       });
     return fileShrub;
   } catch (err) {
@@ -47,11 +48,20 @@ export async function getFileShrub(path: string): Promise<FileShrub> {
 }
 
 export function setApp(app: Application) {
-  app.get('/static/*', (req, res) => {
-    console.log(req.path);
-    console.log(req.params);
+  app.get('/static/*', async (req, res) => {
+    console.log(`GET image path ${req.originalUrl}`);
+    const path = join(basePath, req.params[0]);
+    const { w, h } = req.query;
 
-    res.sendFile(join(basePath, req.params[0]));
+    if (w && h) {
+      const imgBuffer = await sharp(path)
+        .resize(+w, +h)
+        .toBuffer();
+
+      res.send(imgBuffer);
+    } else {
+      res.sendFile(path);
+    }
   });
 }
 
