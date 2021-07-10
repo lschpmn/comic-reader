@@ -4,8 +4,8 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
 import { basename, relative } from 'path';
 import React, { useCallback, useState } from 'react';
-import { FileShrub } from '../../types';
-import { testImagePath } from '../lib/utils';
+import { FileShrub } from '../../../types';
+import { testImagePath } from '../../lib/utils';
 
 const port: number = (window as any).__PORT__;
 

@@ -2,7 +2,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import TreeItem from '@material-ui/lab/TreeItem';
 import { basename } from 'path';
 import React from 'react';
-import { FileShrub } from '../../types';
+import { FileShrub } from '../../../types';
 import FileItem from './FileItem';
 
 type Props = {

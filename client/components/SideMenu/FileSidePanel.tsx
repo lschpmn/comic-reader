@@ -9,7 +9,7 @@ import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import TreeView from '@material-ui/lab/TreeView';
 import { basename } from 'path';
 import React, { useCallback, useContext } from 'react';
-import FileContext from '../contexts/FileContext';
+import FileContext from '../../contexts/FileContext';
 import FileItem from './FileItem';
 
 export default () => {

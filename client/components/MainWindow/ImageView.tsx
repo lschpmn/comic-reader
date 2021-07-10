@@ -1,8 +1,8 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { dirname, join, extname, relative } from 'path';
 import React, { useEffect, useMemo } from 'react';
-import { IMAGE_TYPES } from '../../constants';
-import { FileShrub } from '../../types';
+import { IMAGE_TYPES } from '../../../constants';
+import { FileShrub } from '../../../types';
 
 const port: number = (window as any).__PORT__;
 

@@ -1,7 +1,7 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import React, { useContext, useEffect, useRef } from 'react';
-import FileContext from '../contexts/FileContext';
-import { testImagePath } from '../lib/utils';
+import FileContext from '../../contexts/FileContext';
+import { testImagePath } from '../../lib/utils';
 import ImageView from './ImageView';
 import WindowItem from './WindowItem';
 
