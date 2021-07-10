@@ -3,7 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
 import { basename, relative } from 'path';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FileShrub } from '../../types';
 import { testImagePath } from '../lib/utils';
 
@@ -19,7 +19,9 @@ type Props = {
 export default ({ setSelected, fileShrub, itemPath, path }: Props) => {
   const { isFile } = fileShrub[itemPath];
   const isImage = testImagePath(itemPath);
-  const classes = useStyles();
+  const [size, setSize] = useState(5);
+  const calcSize = size * 50;
+  const classes = useStyles({ size });
 
   const onClickCallback = useCallback(() => setSelected(itemPath), [setSelected, itemPath]);
 
@@ -36,7 +38,7 @@ export default ({ setSelected, fileShrub, itemPath, path }: Props) => {
           loading="lazy"
           title={basename(itemPath)}
           style={{ maxHeight: '100%', maxWidth: '100%' }}
-          src={`http://localhost:${port}/static/${relativePath}?h=240&w=240`}
+          src={`http://localhost:${port}/static/${relativePath}?h=${calcSize}&w=${calcSize}`}
         />
       )}
       {isFile && !isImage && (
@@ -47,33 +49,36 @@ export default ({ setSelected, fileShrub, itemPath, path }: Props) => {
   </Button>;
 };
 
+type StyleProps = {
+  size: number,
+};
+
 const useStyles = makeStyles({
-  container: {
-    height: '17rem',
-    margin: '0.5rem',
-    width: '15rem',
+  container: ({ size }: StyleProps) => ({
+    height: 'fit-content',
+    padding: '0.75rem',
     '& > span': {
       display: 'flex',
       justifyContent: 'space-between',
       flexDirection: 'column',
     },
     '& svg': {
-      fontSize: '10rem',
+      fontSize: `${size * 2}rem`,
     },
-  },
-  icon: {
+  }),
+  icon: ({ size }: StyleProps) => ({
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
-    height: '15rem',
+    height: size * 50,
     justifyContent: 'center',
-    width: '15rem',
-  },
-  label: {
-    height: '2rem',
+    width: size * 50,
+  }),
+  label: ({ size }: StyleProps) => ({
+    height: '1.25rem',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    width: '100%',
-  },
+    width: size * 50,
+  }),
 });
