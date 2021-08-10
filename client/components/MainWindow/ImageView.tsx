@@ -61,13 +61,13 @@ const useNextPrevImgDir = (fileShrub: FileShrub, selected: string) => {
 
     if (!next) {
       const dirNext = fileShrub[parent]?.branches?.[dirIndex + 1];
-      const nextImg = fileShrub[dirNext]?.branches?.[0];
+      const nextImg = fileShrub[dirNext]?.branches?.[0] || '';
       next = IMAGE_TYPES.includes(extname(nextImg)) && nextImg;
     }
 
     if (!prev) {
       const dirPrev = fileShrub[parent]?.branches?.[dirIndex - 1];
-      const prevImage = fileShrub[dirPrev]?.branches?.slice(-1)?.[0];
+      const prevImage = fileShrub[dirPrev]?.branches?.slice(-1)?.[0] || '';
       prev = IMAGE_TYPES.includes(extname(prevImage)) && prevImage;
     }
 
