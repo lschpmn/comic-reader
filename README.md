@@ -7,6 +7,7 @@ directories, usually representing the different chapters of the comic.
 
 - `git clone https://github.com/lschpmn/comic-reader.git`
 - `npm i`
+- `./node_modules/.bin/ts-node index.ts`
 
 ## Usage
 
