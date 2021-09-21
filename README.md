@@ -11,7 +11,7 @@ directories, usually representing the different chapters of the comic.
 
 ## Usage
 
-Star the application, then on the top right click the navigation button to change parent directory. All sub folders for 
+Star the application, then on the top left click the navigation button to change parent directory. All sub folders for 
 the current parent directory is displayed on the left. Navigate through them to find your preferred starting point and 
 double-click the image. The comic will display that image in either full screen or the pictures full resolution, whichever 
 is smaller. Clicking on the right side will advance the comic, the left side will go back. The application automatically 
