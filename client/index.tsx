@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import App from './App';
-import { fileReducer } from './redux/file';
+import { fileReducer } from './redux/file-redux';
 
 const theme = createMuiTheme({
   palette: {
