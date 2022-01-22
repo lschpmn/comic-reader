@@ -1,12 +1,18 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import MainWindow from './components/MainWindow';
 import SideMenu from './components/SideMenu';
 import { FileContextComponent } from './contexts/FileContext';
+import { useGetDefaultPathAction } from './redux/actions';
 
 const App = () => {
+  const getDefaultPathAction = useGetDefaultPathAction();
   const styles = useStyles();
+
+  useEffect(() => {
+    getDefaultPathAction();
+  }, []);
 
   return (
     <FileContextComponent>

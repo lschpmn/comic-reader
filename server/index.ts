@@ -1,6 +1,6 @@
 import * as socket from 'socket.io';
 import { FILE_GET_DEFAULT, FILE_LIST, FILE_SET_PATH } from '../constants';
-import { getDefaultPath, getFileShrub, setApp, setBasePath } from './file-service';
+import { attachSocket, getDefaultPath, getFileShrub, setApp, setBasePath } from './file-service';
 
 const PORT = +process.argv[process.argv.indexOf('--port') + 1];
 const app = require('express')();
@@ -22,6 +22,7 @@ setApp(app);
 
 io.on('connection', (socket: socket.Socket) => {
   console.log('client connected');
+  attachSocket(socket);
 
   socket.on(FILE_GET_DEFAULT, (res) => res(getDefaultPath()));
 

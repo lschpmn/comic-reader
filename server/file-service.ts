@@ -1,10 +1,17 @@
 import { Application } from 'express';
 import { readdir, stat } from 'fs-extra';
+import * as os from 'os';
 import { join } from 'path';
 import * as sharp from 'sharp';
+import { Socket } from 'socket.io';
+import { GET_DEFAULT_PATH } from '../constants';
 import { FileShrub } from '../types';
 
 let basePath = '';
+
+export function attachSocket(socket: Socket) {
+  socket.on(GET_DEFAULT_PATH, (res) => res(os.homedir()));
+}
 
 export function getDefaultPath(): string {
   return join(__dirname, '..');
@@ -12,10 +19,12 @@ export function getDefaultPath(): string {
 
 export async function getFileShrub(path: string): Promise<FileShrub> {
   try {
-    const list = await readdir(path);
     const fileShrub = {
       [path]: { isFile: false, branches: [] },
     } as FileShrub;
+
+    const list = await readdir(path);
+
     const fileShrubPromises = list.map(async node => {
       try {
         const nodePath = join(path, node);
@@ -27,6 +36,7 @@ export async function getFileShrub(path: string): Promise<FileShrub> {
         console.log(err);
       }
     });
+
     await Promise.all(fileShrubPromises);
 
     fileShrub[path].branches
@@ -39,6 +49,7 @@ export async function getFileShrub(path: string): Promise<FileShrub> {
 
         return nameA.localeCompare(nameB, undefined, { numeric: true });
       });
+
     return fileShrub;
   } catch (err) {
     console.log('listFiles error');

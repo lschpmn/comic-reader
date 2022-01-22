@@ -1,3 +1,5 @@
+export const GET_DEFAULT_PATH = `$get-default-path`;
+
 export const FILE_GET_DEFAULT = 'file-get-default';
 
 export const FILE_LIST = 'file-list';
