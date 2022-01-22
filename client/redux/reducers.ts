@@ -1,14 +1,18 @@
+import { combineReducers } from 'redux';
 import { SET_PATH, SET_SELECTED, UPDATE_FILE_SHRUB } from '../../constants';
-import { FileShrub } from '../../types';
+import { FileRedux } from '../types';
 
-
-const defaultState = {
+const defaultFileState = {
   basePath: '',
   fileShrub: {},
   selected: '',
 };
 
-export function fileReducer(state: FileRedux = defaultState, action: { payload: any, type: string }) {
+export const combinedReducers = combineReducers({
+  file: fileReducer,
+});
+
+export function fileReducer(state: FileRedux = defaultFileState, action: { payload: any, type: string }) {
   switch (action.type) {
     case SET_PATH:
       return {
@@ -32,9 +36,3 @@ export function fileReducer(state: FileRedux = defaultState, action: { payload: 
       return state;
   }
 }
-
-export type FileRedux = {
-  basePath: string,
-  fileShrub: FileShrub,
-  selected: string,
-};

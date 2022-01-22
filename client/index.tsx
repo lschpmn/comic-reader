@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import App from './App';
-import { fileReducer } from './redux/file-redux';
+import { combinedReducers } from './redux/reducers';
 
 const theme = createMuiTheme({
   palette: {
@@ -13,7 +13,7 @@ const theme = createMuiTheme({
 });
 
 render(
-  <Provider store={createStore(fileReducer)}>
+  <Provider store={createStore(combinedReducers)}>
     <ThemeProvider theme={theme}>
       <App/>
     </ThemeProvider>
