@@ -1,11 +1,7 @@
 import { FileShrub } from '../types';
 
-export type FileRedux = {
+export type ReduxStore = {
   basePath: string,
   fileShrub: FileShrub,
   selected: string,
-};
-
-export type ReduxStore = {
-  file: FileRedux,
 };

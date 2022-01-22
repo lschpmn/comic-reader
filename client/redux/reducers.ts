@@ -1,18 +1,13 @@
-import { combineReducers } from 'redux';
 import { SET_PATH, SET_SELECTED, UPDATE_FILE_SHRUB } from '../../constants';
-import { FileRedux } from '../types';
+import { ReduxStore } from '../types';
 
-const defaultFileState = {
+const defaultState = {
   basePath: '',
   fileShrub: {},
   selected: '',
 };
 
-export const combinedReducers = combineReducers({
-  file: fileReducer,
-});
-
-export function fileReducer(state: FileRedux = defaultFileState, action: { payload: any, type: string }) {
+export default function reducer(state: ReduxStore = defaultState, action: { payload: any, type: string }) {
   switch (action.type) {
     case SET_PATH:
       return {
