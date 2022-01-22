@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { GET_DEFAULT_PATH, SET_PATH } from '../../constants';
+import { GET_DEFAULT_PATH, SET_PATH, SET_SELECTED } from '../../constants';
 import socket from '../lib/socket';
 
 export const useGetDefaultPathAction = () => {
@@ -11,4 +11,13 @@ export const useGetDefaultPathAction = () => {
   });
 
   return () => socket.emit(GET_DEFAULT_PATH, listener);
+};
+
+export const useSetSelectedAction = () => {
+  const dispatch = useDispatch();
+
+  return (path: string) => dispatch({
+    payload: path,
+    type: SET_SELECTED,
+  });
 };
