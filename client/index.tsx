@@ -1,7 +1,10 @@
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import React from 'react';
 import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import App from './App';
+import { fileReducer } from './redux/file';
 
 const theme = createMuiTheme({
   palette: {
@@ -10,5 +13,9 @@ const theme = createMuiTheme({
 });
 
 render(
-  <ThemeProvider theme={theme}><App/></ThemeProvider>
+  <Provider store={createStore(fileReducer)}>
+    <ThemeProvider theme={theme}>
+      <App/>
+    </ThemeProvider>
+  </Provider>
   , document.getElementById('app'));
