@@ -14,15 +14,11 @@ export default function FileItem({ path }: Props){
   const readDirAction = useReadDirAction();
   const setSelectedAction = useSetSelectedAction();
   const branches = useSelector((store: ReduxStore) => store.fileShrub[path].branches, shallowEqual) || [];
-  const fileShrub = useSelector((store: ReduxStore) => {
-    const shrub = {};
-    branches.forEach(branch => shrub[branch] = store.fileShrub[branch]);
-    return shrub;
-  }, shallowEqual);
+  const node = useSelector((store: ReduxStore) => store.fileShrub[path], shallowEqual);
   const classes = useStyles();
 
   return <>
-    {branches.map(node => (
+    {!node.isFile && branches.map(node => (
       <TreeItem
         classes={{
           label: classes.labels,
@@ -37,11 +33,9 @@ export default function FileItem({ path }: Props){
         }}
         label={basename(node)}
       >
-        {!fileShrub[node].isFile && (
-          <FileItem
-            path={node}
-          />
-        )}
+        <FileItem
+          path={node}
+        />
       </TreeItem>
     ))}
   </>;
