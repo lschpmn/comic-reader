@@ -4,36 +4,38 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
 import { basename, relative } from 'path';
 import React, { useCallback, useState } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import { FileShrub } from '../../../types';
 import { testImagePath } from '../../lib/utils';
+import { useSetSelectedAction } from '../../redux/actions';
+import { ReduxStore } from '../../types';
 
 const port: number = (window as any).__PORT__;
 
 type Props = {
-  fileShrub: FileShrub,
+  basePath: string,
   itemPath: string,
-  setSelected: (path: string) => void,
-  path: string,
 };
 
-export default ({ setSelected, fileShrub, itemPath, path }: Props) => {
-  const { isFile } = fileShrub[itemPath];
-  const isImage = testImagePath(itemPath);
+export default ({ basePath, itemPath }: Props) => {
+  const setSelectedAction = useSetSelectedAction();
+  const node = useSelector((store: ReduxStore) => store.fileShrub[itemPath], shallowEqual);
+  const isImage = node.isFile && testImagePath(itemPath);
   const [size, setSize] = useState(5);
   const calcSize = size * 50;
   const classes = useStyles({ size });
 
-  const onClickCallback = useCallback(() => setSelected(itemPath), [setSelected, itemPath]);
+  const onClickCallback = useCallback(() => setSelectedAction(itemPath), [setSelectedAction, itemPath]);
 
-  const firstImage = fileShrub[itemPath].branches?.find(testImagePath);
-  const relativePath = relative(path, firstImage || itemPath);
+  const firstImage = node.branches?.find(testImagePath);
+  const relativePath = relative(basePath, firstImage || itemPath);
 
   return <Button key={itemPath} className={classes.container} onDoubleClick={onClickCallback}>
     <div className={classes.icon}>
-      {!isFile && !firstImage && (
+      {!node.isFile && !firstImage && (
         <FolderIcon/>
       )}
-      {(!isFile && firstImage || isImage) && (
+      {(!node.isFile && firstImage || isImage) && (
         <img
           loading="lazy"
           title={basename(itemPath)}
@@ -41,7 +43,7 @@ export default ({ setSelected, fileShrub, itemPath, path }: Props) => {
           src={`//localhost:${port}/static/${relativePath}?h=${calcSize}&w=${calcSize}`}
         />
       )}
-      {isFile && !isImage && (
+      {node.isFile && !isImage && (
         <DescriptionIcon/>
       )}
     </div>

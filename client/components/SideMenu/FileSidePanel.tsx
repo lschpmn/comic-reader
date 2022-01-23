@@ -8,15 +8,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import TreeView from '@material-ui/lab/TreeView';
 import { basename } from 'path';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { useChangeDirAction, useReadDirAction, useSetSelectedAction } from '../../redux/actions';
+import { useChangeDirAction, useSetSelectedAction } from '../../redux/actions';
 import { ReduxStore } from '../../types';
 import FileItem from './FileItem';
 
 export default () => {
   const changeDirAction = useChangeDirAction();
-  const readDirAction = useReadDirAction();
   const setSelectedAction = useSetSelectedAction();
   const basePath = useSelector((store: ReduxStore) => store.basePath);
   const branches = useSelector((store: ReduxStore) => store.fileShrub[basePath]?.branches, shallowEqual);
@@ -24,8 +23,6 @@ export default () => {
   const classes = useStyles();
 
   const resetSelected = useCallback(() => setSelectedAction(''), [setSelectedAction]);
-
-  useEffect(() => readDirAction(basePath), [basePath]);
 
   return <Paper style={{ overflow: 'auto', width: '15rem' }}>
     <AppBar position="relative" style={{ height: 'auto' }}>

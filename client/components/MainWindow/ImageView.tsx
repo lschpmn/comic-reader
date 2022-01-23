@@ -1,22 +1,25 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { dirname, join, extname, relative } from 'path';
 import React, { useEffect, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { IMAGE_TYPES } from '../../../constants';
 import { FileShrub } from '../../../types';
+import { useSetSelectedAction } from '../../redux/actions';
+import { ReduxStore } from '../../types';
 
 const port: number = (window as any).__PORT__;
 
 type Props = {
-  fileShrub: FileShrub,
   path: string,
   selected: string,
-  setSelected: (path: string) => void,
 };
 
 const nextButtons = ['ArrowDown', 'ArrowRight', ' ', 'Enter'];
 const previousButtons = ['ArrowUp', 'ArrowLeft', 'Backspace'];
 
-export default ({ fileShrub, path, selected, setSelected }: Props) => {
+export default ({ path, selected }: Props) => {
+  const fileShrub = useSelector((store: ReduxStore) => store.fileShrub);
+  const setSelectedAction = useSetSelectedAction();
   const classes = useStyles();
   const relativePath = relative(path, selected);
 
@@ -24,22 +27,22 @@ export default ({ fileShrub, path, selected, setSelected }: Props) => {
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
-      if (nextButtons.includes(e.key) && next) setSelected(next);
-      if (previousButtons.includes(e.key) && prev) setSelected(prev);
+      if (nextButtons.includes(e.key) && next) setSelectedAction(next);
+      if (previousButtons.includes(e.key) && prev) setSelectedAction(prev);
     };
 
     document.addEventListener('keydown', listener);
     return () => document.removeEventListener('keydown', listener);
-  }, [next, prev, setSelected]);
+  }, [next, prev, setSelectedAction]);
 
   return <div className={classes.container}>
     <div
       className={classes.clickOverlay}
-      onClick={() => prev && setSelected(prev)}
+      onClick={() => prev && setSelectedAction(prev)}
     />
     <div
       className={classes.clickOverlay}
-      onClick={() => next && setSelected(next)}
+      onClick={() => next && setSelectedAction(next)}
       style={{ right: 0 }}
     />
     <img

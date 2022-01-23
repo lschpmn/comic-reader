@@ -1,36 +1,37 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import React, { useContext, useEffect, useRef } from 'react';
-import FileContext from '../../contexts/FileContext';
+import React, { useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { testImagePath } from '../../lib/utils';
+import { useReadDirAction } from '../../redux/actions';
+import { ReduxStore } from '../../types';
 import ImageView from './ImageView';
 import WindowItem from './WindowItem';
 
 export default () => {
-  const { fileShrub, path, selected, setSelected } = useContext(FileContext);
+  const readDirAction = useReadDirAction();
+  const basePath = useSelector((store: ReduxStore) => store.basePath);
+  const selectedPath = useSelector((store: ReduxStore) => store.selectedPath);
+  const branches = useSelector((store: ReduxStore) => store.fileShrub[selectedPath || basePath]?.branches) || [];
   const classes = useStyles();
   const main = useRef(null);
 
-  const isImage = testImagePath(selected);
-  const nodes = fileShrub[selected || path]?.branches || [];
+  const isImage = testImagePath(selectedPath);
 
-  useEffect(() => main?.current?.scrollTo(0, 0), [selected, path]);
+  useEffect(() => main?.current?.scrollTo(0, 0), [basePath, selectedPath]);
+  useEffect(() => !isImage && !branches.length && readDirAction(selectedPath || basePath), [branches]);
 
   return <div className={classes.container} ref={main}>
     {isImage && (
       <ImageView
-        fileShrub={fileShrub}
-        path={path}
-        selected={selected}
-        setSelected={setSelected}
+        path={basePath}
+        selected={selectedPath}
       />
     )}
-    {nodes.map(node => (
+    {branches.map(node => (
       <WindowItem
         key={node}
-        fileShrub={fileShrub}
+        basePath={basePath}
         itemPath={node}
-        setSelected={setSelected}
-        path={path}
       />
     ))}
   </div>;

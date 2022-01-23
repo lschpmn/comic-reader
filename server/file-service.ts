@@ -8,21 +8,20 @@ import { GET_DEFAULT_PATH, READ_DIR, SET_PATH } from '../constants';
 import { FileShrub } from '../types';
 
 let basePath = '';
-let basePathh = '';
 
 export function attachSocket(socket: Socket) {
-  socket.on(GET_DEFAULT_PATH, (res) => res(os.homedir()));
+  socket.on(GET_DEFAULT_PATH, (res) => {
+    const homeDir = os.homedir();
+    basePath = homeDir;
+    res(homeDir);
+  });
 
   socket.on(READ_DIR, (path, res) => getFileShrub(path).then(res));
 
   socket.on(SET_PATH, (path, res) => {
-    basePathh = path;
+    basePath = path;
     res();
   });
-}
-
-export function getDefaultPath(): string {
-  return join(__dirname, '..');
 }
 
 export async function getFileShrub(path: string): Promise<FileShrub> {
@@ -72,18 +71,18 @@ export function setApp(app: Application) {
     const path = join(basePath, req.params[0]);
     const { w, h } = req.query;
 
-    if (w && h) {
-      const imgBuffer = await sharp(path)
-        .resize(+w, +h)
-        .toBuffer();
+    try {
+      if (w && h) {
+        const imgBuffer = await sharp(path)
+          .resize(+w, +h)
+          .toBuffer();
 
-      res.send(imgBuffer);
-    } else {
-      res.sendFile(path);
+        res.send(imgBuffer);
+      } else {
+        res.sendFile(path);
+      }
+    } catch (err) {
+      res.status(500).end();
     }
   });
-}
-
-export function setBasePath(newBasePath: string) {
-  basePath = newBasePath;
 }
