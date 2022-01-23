@@ -2,10 +2,9 @@ import Button from '@material-ui/core/Button';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
-import { basename, relative } from 'path';
+import { basename } from 'path';
 import React, { useCallback, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { FileShrub } from '../../../types';
 import { testImagePath } from '../../lib/utils';
 import { useSetSelectedAction } from '../../redux/actions';
 import { ReduxStore } from '../../types';
@@ -13,11 +12,10 @@ import { ReduxStore } from '../../types';
 const port: number = (window as any).__PORT__;
 
 type Props = {
-  basePath: string,
   itemPath: string,
 };
 
-export default ({ basePath, itemPath }: Props) => {
+export default ({ itemPath }: Props) => {
   const setSelectedAction = useSetSelectedAction();
   const node = useSelector((store: ReduxStore) => store.fileShrub[itemPath], shallowEqual);
   const isImage = node.isFile && testImagePath(itemPath);
@@ -28,7 +26,7 @@ export default ({ basePath, itemPath }: Props) => {
   const onClickCallback = useCallback(() => setSelectedAction(itemPath), [setSelectedAction, itemPath]);
 
   const firstImage = node.branches?.find(testImagePath);
-  const relativePath = relative(basePath, firstImage || itemPath);
+  const fullPath = firstImage || itemPath;
 
   return <Button key={itemPath} className={classes.container} onDoubleClick={onClickCallback}>
     <div className={classes.icon}>
@@ -40,7 +38,7 @@ export default ({ basePath, itemPath }: Props) => {
           loading="lazy"
           title={basename(itemPath)}
           style={{ maxHeight: '100%', maxWidth: '100%' }}
-          src={`//localhost:${port}/static/${relativePath}?h=${calcSize}&w=${calcSize}`}
+          src={`//localhost:${port}/static/image?h=${calcSize}&w=${calcSize}&p=${encodeURIComponent(fullPath)}`}
         />
       )}
       {node.isFile && !isImage && (

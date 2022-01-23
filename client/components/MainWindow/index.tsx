@@ -17,20 +17,18 @@ export default () => {
 
   const isImage = testImagePath(selectedPath);
 
-  useEffect(() => main?.current?.scrollTo(0, 0), [basePath, selectedPath]);
+  useEffect(() => main?.current?.scrollTo(0, 0), [selectedPath]);
   useEffect(() => !isImage && !branches.length && readDirAction(selectedPath || basePath), [branches]);
 
   return <div className={classes.container} ref={main}>
     {isImage && (
       <ImageView
-        path={basePath}
-        selected={selectedPath}
+        selectedPath={selectedPath}
       />
     )}
     {branches.map(node => (
       <WindowItem
         key={node}
-        basePath={basePath}
         itemPath={node}
       />
     ))}

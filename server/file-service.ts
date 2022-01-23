@@ -66,10 +66,10 @@ export async function getFileShrub(path: string): Promise<FileShrub> {
 }
 
 export function setApp(app: Application) {
-  app.get('/static/*', async (req, res) => {
-    console.log(`GET image path ${req.originalUrl}`);
-    const path = join(basePath, req.params[0]);
-    const { w, h } = req.query;
+  app.get('/static/image', async (req, res) => {
+    const { w, h, p } = req.query;
+    const path = decodeURIComponent(p as string);
+    console.log(`GET image path ${path}`);
 
     try {
       if (w && h) {
@@ -82,6 +82,7 @@ export function setApp(app: Application) {
         res.sendFile(path);
       }
     } catch (err) {
+      console.log(err);
       res.status(500).end();
     }
   });

@@ -10,20 +10,18 @@ import { ReduxStore } from '../../types';
 const port: number = (window as any).__PORT__;
 
 type Props = {
-  path: string,
-  selected: string,
+  selectedPath: string,
 };
 
 const nextButtons = ['ArrowDown', 'ArrowRight', ' ', 'Enter'];
 const previousButtons = ['ArrowUp', 'ArrowLeft', 'Backspace'];
 
-export default ({ path, selected }: Props) => {
+export default ({ selectedPath }: Props) => {
   const fileShrub = useSelector((store: ReduxStore) => store.fileShrub);
   const setSelectedAction = useSetSelectedAction();
   const classes = useStyles();
-  const relativePath = relative(path, selected);
 
-  const [next, prev] = useNextPrevImgDir(fileShrub, selected);
+  const [next, prev] = useNextPrevImgDir(fileShrub, selectedPath);
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
@@ -47,7 +45,7 @@ export default ({ path, selected }: Props) => {
     />
     <img
       className={classes.image}
-      src={`http://localhost:${port}/static/${relativePath}`}
+      src={`http://localhost:${port}/static/image?p=${selectedPath}`}
     />
   </div>;
 };
