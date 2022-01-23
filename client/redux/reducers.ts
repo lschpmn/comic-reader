@@ -4,7 +4,7 @@ import { ReduxStore } from '../types';
 const defaultState = {
   basePath: '',
   fileShrub: {},
-  selected: '',
+  selectedPath: '',
 };
 
 export default function reducer(state: ReduxStore = defaultState, action: { payload: any, type: string }) {
@@ -13,11 +13,12 @@ export default function reducer(state: ReduxStore = defaultState, action: { payl
       return {
         ...state,
         basePath: action.payload,
+        selectedPath: '',
       };
     case SET_SELECTED:
       return {
         ...state,
-        selected: action.payload,
+        selectedPath: action.payload,
       };
     case UPDATE_FILE_SHRUB:
       return {

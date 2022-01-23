@@ -4,13 +4,21 @@ import * as os from 'os';
 import { join } from 'path';
 import * as sharp from 'sharp';
 import { Socket } from 'socket.io';
-import { GET_DEFAULT_PATH } from '../constants';
+import { GET_DEFAULT_PATH, READ_DIR, SET_PATH } from '../constants';
 import { FileShrub } from '../types';
 
 let basePath = '';
+let basePathh = '';
 
 export function attachSocket(socket: Socket) {
   socket.on(GET_DEFAULT_PATH, (res) => res(os.homedir()));
+
+  socket.on(READ_DIR, (path, res) => getFileShrub(path).then(res));
+
+  socket.on(SET_PATH, (path, res) => {
+    basePathh = path;
+    res();
+  });
 }
 
 export function getDefaultPath(): string {
