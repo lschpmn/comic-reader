@@ -13,8 +13,10 @@ const theme = createMuiTheme({
   },
 });
 
+const store = createStore(reducer, undefined, applyMiddleware(loggingMiddleware));
+
 render(
-  <Provider store={createStore(reducer, undefined, applyMiddleware(loggingMiddleware))}>
+  <Provider store={store}>
     <ThemeProvider theme={theme}>
       <App/>
     </ThemeProvider>
