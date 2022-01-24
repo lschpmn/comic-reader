@@ -3,6 +3,7 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import { basename } from 'path';
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { useFileShrubForPath } from '../../lib/utils';
 import { useReadDirAction, useSetSelectedAction } from '../../redux/actions';
 import { ReduxStore } from '../../types';
 
@@ -14,11 +15,7 @@ export default function FileItem({ path }: Props){
   const readDirAction = useReadDirAction();
   const setSelectedAction = useSetSelectedAction();
   const branches = useSelector((store: ReduxStore) => store.fileShrub[path].branches, shallowEqual) || [];
-  const fileShrub = useSelector((store: ReduxStore) => {
-    const newShrub = {};
-    branches.forEach(branch => newShrub[branch] = store.fileShrub[branch]);
-    return newShrub;
-  });
+  const fileShrub = useFileShrubForPath(path);
   const classes = useStyles();
 
   return <>

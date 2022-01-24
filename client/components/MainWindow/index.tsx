@@ -1,7 +1,7 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { testImagePath } from '../../lib/utils';
+import { testImagePath, useFileShrubForPath } from '../../lib/utils';
 import { useReadDirAction } from '../../redux/actions';
 import { ReduxStore } from '../../types';
 import ImageView from './ImageView';
@@ -13,6 +13,8 @@ export default () => {
   const selectedPath = useSelector((store: ReduxStore) => store.selectedPath);
   const path = selectedPath || basePath;
   const branches = useSelector((store: ReduxStore) => store.fileShrub[path]?.branches) || [];
+  const fileShrub = useFileShrubForPath(path);
+  const [loading, setLoading] = useState('');
   const classes = useStyles();
   const main = useRef(null);
 
@@ -20,6 +22,14 @@ export default () => {
 
   useEffect(() => main?.current?.scrollTo(0, 0), [selectedPath]);
   useEffect(() => !isImage && !branches.length && !!path && readDirAction(path), [branches]);
+
+  useEffect(() => {
+    const notLoaded = branches.find(branch => fileShrub[branch].branches === undefined);
+    if (!!notLoaded && notLoaded !== loading) {
+      setLoading(notLoaded);
+      readDirAction(notLoaded);
+    }
+  }, [branches, fileShrub]);
 
   return <div className={classes.container} ref={main}>
     {isImage && (

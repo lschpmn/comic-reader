@@ -18,9 +18,9 @@ export function attachSocket(socket: Socket) {
 
 export async function getFileShrub(path: string): Promise<FileShrub> {
   try {
-    const fileShrub = {
+    const fileShrub: FileShrub = {
       [path]: { isFile: false, branches: [] },
-    } as FileShrub;
+    };
 
     const list = await readdir(path);
 
