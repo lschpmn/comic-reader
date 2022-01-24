@@ -3,32 +3,30 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
 import { basename } from 'path';
-import React, { useCallback, useState } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import React from 'react';
+import { FileNode } from '../../../types';
 import { testImagePath } from '../../lib/utils';
-import { useSetSelectedAction } from '../../redux/actions';
-import { ReduxStore } from '../../types';
 
 const port: number = (window as any).__PORT__;
 
 type Props = {
   itemPath: string,
+  node: FileNode,
+  setSelectedAction: Function,
+  size: number,
 };
 
-export default ({ itemPath }: Props) => {
-  const setSelectedAction = useSetSelectedAction();
-  const node = useSelector((store: ReduxStore) => store.fileShrub[itemPath], shallowEqual);
+export default ({ itemPath, node, setSelectedAction, size }: Props) => {
   const isImage = node.isFile && testImagePath(itemPath);
-  const [size, setSize] = useState(5);
   const calcSize = size * 50;
   const classes = useStyles({ size });
-
-  const onClickCallback = useCallback(() => setSelectedAction(itemPath), [setSelectedAction, itemPath]);
 
   const firstImage = node.branches?.find(testImagePath);
   const fullPath = firstImage || itemPath;
 
-  return <Button key={itemPath} className={classes.container} onDoubleClick={onClickCallback}>
+  // console.log(`render file item ${itemPath}`);
+
+  return <Button key={itemPath} className={classes.container} onDoubleClick={() => setSelectedAction(itemPath)}>
     <div className={classes.icon}>
       {!node.isFile && !firstImage && (
         <FolderIcon/>
