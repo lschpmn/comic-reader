@@ -4,24 +4,16 @@ import * as os from 'os';
 import { join } from 'path';
 import * as sharp from 'sharp';
 import { Socket } from 'socket.io';
-import { GET_DEFAULT_PATH, READ_DIR, SET_PATH } from '../constants';
+import { GET_DEFAULT_PATH, READ_DIR } from '../constants';
 import { FileShrub } from '../types';
-
-let basePath = '';
 
 export function attachSocket(socket: Socket) {
   socket.on(GET_DEFAULT_PATH, (res) => {
     const homeDir = os.homedir();
-    basePath = homeDir;
     res(homeDir);
   });
 
   socket.on(READ_DIR, (path, res) => getFileShrub(path).then(res));
-
-  socket.on(SET_PATH, (path, res) => {
-    basePath = path;
-    res();
-  });
 }
 
 export async function getFileShrub(path: string): Promise<FileShrub> {
@@ -59,7 +51,7 @@ export async function getFileShrub(path: string): Promise<FileShrub> {
 
     return fileShrub;
   } catch (err) {
-    console.log('listFiles error');
+    console.log(`getFileShrub error at path ${path}`);
     console.log(err);
     return null;
   }

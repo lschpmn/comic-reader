@@ -11,14 +11,15 @@ export default () => {
   const readDirAction = useReadDirAction();
   const basePath = useSelector((store: ReduxStore) => store.basePath);
   const selectedPath = useSelector((store: ReduxStore) => store.selectedPath);
-  const branches = useSelector((store: ReduxStore) => store.fileShrub[selectedPath || basePath]?.branches) || [];
+  const path = selectedPath || basePath;
+  const branches = useSelector((store: ReduxStore) => store.fileShrub[path]?.branches) || [];
   const classes = useStyles();
   const main = useRef(null);
 
   const isImage = testImagePath(selectedPath);
 
   useEffect(() => main?.current?.scrollTo(0, 0), [selectedPath]);
-  useEffect(() => !isImage && !branches.length && readDirAction(selectedPath || basePath), [branches]);
+  useEffect(() => !isImage && !branches.length && !!path && readDirAction(path), [branches]);
 
   return <div className={classes.container} ref={main}>
     {isImage && (

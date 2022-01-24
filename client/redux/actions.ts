@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { GET_DEFAULT_PATH, READ_DIR, SET_PATH, SET_SELECTED, UPDATE_FILE_SHRUB } from '../../constants';
 import socket from '../lib/socket';
 import { openPathDialog } from '../lib/utils';
@@ -13,10 +13,10 @@ export const useChangeDirAction = () => {
     const dialogRes: Electron.OpenDialogReturnValue = await openPathDialog(selectedPath);
     const newPath = dialogRes.filePaths[0];
     if (!newPath) return;
-    socket.emit(SET_PATH, newPath, () => dispatch({
+    dispatch({
       payload: newPath,
       type: SET_PATH,
-    }));
+    });
     return newPath;
   }, [dispatch, selectedPath]);
 };
@@ -34,14 +34,17 @@ export const useGetDefaultPathAction = () => {
 
 export const useReadDirAction = () => {
   const dispatch = useDispatch();
+  const store = useStore();
 
   return useCallback((path: string) => {
-      socket.emit(READ_DIR, path, fileShrub => dispatch({
-        payload: fileShrub,
-        type: UPDATE_FILE_SHRUB,
-      }));
-    },
-    [dispatch]);
+    const state: ReduxStore = store.getState();
+    if (state.fileShrub[path]?.branches?.length) return;
+
+    socket.emit(READ_DIR, path, fileShrub => dispatch({
+      payload: fileShrub,
+      type: UPDATE_FILE_SHRUB,
+    }));
+  }, [dispatch]);
 };
 
 export const useSetSelectedAction = () => {

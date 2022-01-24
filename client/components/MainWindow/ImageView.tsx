@@ -1,5 +1,5 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { dirname, join, extname, relative } from 'path';
+import { dirname, extname, join } from 'path';
 import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { IMAGE_TYPES } from '../../../constants';
@@ -45,7 +45,7 @@ export default ({ selectedPath }: Props) => {
     />
     <img
       className={classes.image}
-      src={`http://localhost:${port}/static/image?p=${selectedPath}`}
+      src={`http://localhost:${port}/static/image?p=${encodeURIComponent(selectedPath)}`}
     />
   </div>;
 };
