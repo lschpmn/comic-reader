@@ -2,21 +2,29 @@ import Button from '@material-ui/core/Button';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import DescriptionIcon from '@material-ui/icons/Description';
 import FolderIcon from '@material-ui/icons/Folder';
-import { basename } from 'path';
-import React from 'react';
-import { FileNode } from '../../../types';
-import { testImagePath } from '../../lib/utils';
+import { basename, dirname } from 'path';
+import React, { useEffect, useState } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
+import { testImagePath, useFileShrubForPath } from '../../lib/utils';
+import { useReadDirAction, useSetSelectedAction } from '../../redux/actions';
+import { ReduxStore } from '../../types';
 
 const port: number = (window as any).__PORT__;
 
 type Props = {
+  first: boolean,
   itemPath: string,
-  node: FileNode,
-  setSelectedAction: Function,
   size: number,
 };
 
-export default ({ itemPath, node, setSelectedAction, size }: Props) => {
+export default ({ first, itemPath, size }: Props) => {
+  const dir = dirname(itemPath);
+  const branches = useSelector((store: ReduxStore) => first && store.fileShrub[dir]?.branches);
+  const fileShrub = useFileShrubForPath(first && dir);
+  const setSelectedAction = useSetSelectedAction();
+  const readDirAction = useReadDirAction();
+  const node = useSelector((store: ReduxStore) => store.fileShrub[itemPath], shallowEqual);
+  const [loading, setLoading] = useState('');
   const isImage = node.isFile && testImagePath(itemPath);
   const calcSize = size * 50;
   const classes = useStyles({ size });
@@ -24,7 +32,13 @@ export default ({ itemPath, node, setSelectedAction, size }: Props) => {
   const firstImage = node.branches?.find(testImagePath);
   const fullPath = firstImage || itemPath;
 
-  // console.log(`render file item ${itemPath}`);
+  useEffect(() => {
+    const notLoaded = branches?.find?.(branch => !fileShrub[branch].isFile && fileShrub[branch].branches === undefined);
+    if (!!notLoaded && notLoaded !== loading) {
+      setLoading(notLoaded);
+      readDirAction(notLoaded);
+    }
+  }, [branches, fileShrub]);
 
   return <Button key={itemPath} className={classes.container} onDoubleClick={() => setSelectedAction(itemPath)}>
     <div className={classes.icon}>
