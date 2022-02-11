@@ -8,10 +8,7 @@ import { GET_DEFAULT_PATH, READ_DIR } from '../constants';
 import { FileShrub } from '../types';
 
 export function attachSocket(socket: Socket) {
-  socket.on(GET_DEFAULT_PATH, (res) => {
-    const homeDir = os.homedir();
-    res(homeDir);
-  });
+  socket.on(GET_DEFAULT_PATH, (res) =>  res(os.homedir()));
 
   socket.on(READ_DIR, (path, res) => getFileShrub(path).then(res));
 }
