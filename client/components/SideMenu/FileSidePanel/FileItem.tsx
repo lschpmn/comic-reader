@@ -3,9 +3,9 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import { basename } from 'path';
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { useFileShrubForPath } from '../../lib/utils';
-import { useReadDirAction, useSetSelectedAction } from '../../redux/actions';
-import { ReduxStore } from '../../types';
+import { useFileShrubForPath } from '../../../lib/utils';
+import { useReadDirAction, useSetSelectedAction } from '../../../redux/actions';
+import { ReduxStore } from '../../../types';
 
 type Props = {
   path: string,

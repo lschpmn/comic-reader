@@ -10,8 +10,8 @@ import TreeView from '@material-ui/lab/TreeView';
 import { basename } from 'path';
 import React, { useCallback } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { useChangeDirAction, useSetSelectedAction } from '../../redux/actions';
-import { ReduxStore } from '../../types';
+import { useChangeDirAction, useSetSelectedAction } from '../../../redux/actions';
+import { ReduxStore } from '../../../types';
 import FileItem from './FileItem';
 
 export default () => {
